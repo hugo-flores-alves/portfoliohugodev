@@ -10,7 +10,7 @@ Projetos orientados a problemas reais de negócio, com foco tanto em **vagas de 
 |---|---|---|---|
 | [LeadFlow](./projects/leadflow/) | Qualificação, deduplicação, persistência e alerta de leads | n8n, Google Sheets, Telegram, Webhooks, JavaScript | ✅ Funcional |
 | [SmartCRM](./projects/smartcrm/) | Pipeline comercial, atualização de leads e follow-ups automáticos | n8n, Google Sheets, Telegram, Schedule Trigger, JavaScript | ✅ Funcional |
-| SupportFlow | Atendimento e triagem automatizada | n8n, Telegram, APIs | 🚧 Próximo |
+| [SupportFlow](./projects/supportflow/) | Triagem de suporte com regras e classificação por IA | n8n, Google Sheets, Telegram, OpenRouter, LLM, JavaScript | 🤖 AI V2 |
 | DataSync | Sincronização e transformação entre APIs | n8n, REST APIs, ETL | 🚧 Planejado |
 | AI Assistant | Automação com IA e recuperação de contexto | n8n, LLM, RAG | 🚧 Planejado |
 
@@ -38,17 +38,37 @@ Continua o processo após a captura: atualiza estágio, último contato, próxim
 
 [Ver SmartCRM](./projects/smartcrm/)
 
-## Ecossistema comercial
+### SupportFlow
 
 ```text
-                    LEADFLOW
-Formulário → Captura → Scoring → Deduplicação → Google Sheets
-                                                   ↓
-                                                SMARTCRM
-                                      Pipeline → Follow-up → Alertas
+                 ┌─ V1: regras determinísticas
+Ticket → Validação
+                 └─ V2: classificação por IA via OpenRouter
+                              ↓
+                       Google Sheets
+                              ↓
+                         Crítico?
+                      SIM → Telegram
 ```
 
-Os projetos foram desenhados para funcionar individualmente e também como partes de uma operação comercial automatizada.
+Automatiza a triagem de atendimento. A V1 usa regras previsíveis; a AI V2 envia assunto e mensagem para um LLM, normaliza a resposta estruturada e usa categoria e prioridade para decidir o roteamento do chamado.
+
+[Ver SupportFlow](./projects/supportflow/)
+
+## Ecossistema de automações
+
+```text
+LEADFLOW
+Captura → Scoring → Deduplicação → Persistência
+                              ↓
+                          SMARTCRM
+                   Pipeline → Follow-up → Alertas
+
+SUPPORTFLOW
+Solicitação → Triagem → IA → Ticket → Alerta crítico
+```
+
+Os projetos foram desenhados para funcionar individualmente e demonstrar diferentes problemas de negócio: aquisição comercial, acompanhamento de oportunidades e atendimento ao cliente.
 
 ## O que este portfólio demonstra
 
@@ -56,6 +76,10 @@ Os projetos foram desenhados para funcionar individualmente e também como parte
 - Integração via REST APIs e webhooks
 - Google OAuth 2.0 e APIs Google
 - Integração com Telegram Bot API
+- Integração com LLM via OpenRouter
+- Autenticação de API por Header Auth / Bearer token
+- Prompting e respostas estruturadas em JSON
+- Parsing e validação de saída de IA
 - Tratamento e transformação de dados
 - Validação e regras de negócio
 - Deduplicação e atualização de registros
@@ -76,15 +100,19 @@ portfoliohugodev/
     │   ├── workflow.json
     │   ├── workflow-v2.json
     │   └── sample-payload.json
-    └── smartcrm/
+    ├── smartcrm/
+    │   ├── README.md
+    │   ├── workflow-update-stage.json
+    │   └── workflow-followup-monitor.json
+    └── supportflow/
         ├── README.md
-        ├── workflow-update-stage.json
-        └── workflow-followup-monitor.json
+        ├── workflow.json
+        └── workflow-ai-v2.json
 ```
 
 ## Sobre
 
-**FlowForge Automations** é uma identidade de portfólio focada em automação, integrações e soluções low-code/no-code com extensão por código.
+**FlowForge Automations** é uma identidade de portfólio focada em automação, integrações e soluções low-code/no-code com extensão por código e IA.
 
 O objetivo não é apenas mostrar workflows. Cada projeto parte de um problema de negócio, documenta decisões técnicas e inclui material para reprodução e demonstração.
 

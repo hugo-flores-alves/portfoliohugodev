@@ -3,47 +3,81 @@
 ## Visão geral
 
 ```text
-┌─────────────────┐
-│ Form / Website  │
-└────────┬────────┘
+┌──────────────────┐
+│ Form / Website   │
+└────────┬─────────┘
          │ POST JSON
          ▼
-┌─────────────────┐
-│  n8n Webhook    │
-└────────┬────────┘
+┌──────────────────┐
+│ n8n Webhook      │
+└────────┬─────────┘
          ▼
-┌─────────────────┐
-│ Validate +      │
-│ Normalize       │
-└────────┬────────┘
+┌──────────────────┐
+│ Validate +       │
+│ Normalize        │
+└────────┬─────────┘
          ▼
-┌─────────────────┐
-│ Lead Scoring    │
-└────────┬────────┘
+┌──────────────────┐
+│ Lead Scoring     │
+└────────┬─────────┘
          ▼
-┌─────────────────┐
-│ Webhook Response│
-└─────────────────┘
+┌──────────────────┐
+│ Google Sheets    │
+│ Email Lookup     │
+└────────┬─────────┘
+         ▼
+    Duplicate?
+      /     \
+    yes      no
+     │        │
+     ▼        ▼
+  Stop     Append Row
+              │
+              ▼
+           Hot Lead?
+            /    \
+          yes     no
+           │       │
+           ▼       ▼
+       Telegram   Finish
 ```
 
 ## Decisões técnicas
 
 ### Webhook como entrada
 
-Permite conectar o fluxo a praticamente qualquer formulário, site, aplicação ou serviço capaz de realizar uma requisição HTTP.
+Mantém a automação desacoplada da origem. Qualquer formulário, site ou aplicação capaz de enviar HTTP POST pode alimentar o workflow.
 
-### Normalização antes da lógica de negócio
+### Normalização antes das regras
 
-Nome, e-mail, tamanho da empresa e interesse são convertidos para um formato previsível antes do scoring. Isso reduz erros nas etapas seguintes.
+Os campos são convertidos para formatos previsíveis antes do scoring e da persistência. Isso reduz inconsistências nas etapas seguintes.
 
 ### Scoring determinístico
 
-O primeiro MVP usa regras explícitas em vez de IA. Isso torna o comportamento reproduzível, barato e fácil de auditar.
+O score utiliza regras explícitas. Para uma primeira automação comercial isso torna o resultado barato, auditável e fácil de explicar para clientes e recrutadores.
 
-### Resposta estruturada
+### Deduplicação por e-mail
 
-O consumidor recebe o resultado do processamento imediatamente, incluindo `score`, `classification`, dados normalizados e timestamp.
+Antes de persistir um lead, o workflow consulta a coluna `Email` no Google Sheets. Um registro encontrado segue para a resposta de duplicidade; uma busca vazia segue para inserção.
 
-## Evolução para produção
+Essa decisão evita duplicação sem exigir banco de dados no MVP.
 
-Uma implementação de produção adicionaria autenticação do webhook, persistência, idempotência/deduplicação, observabilidade, error workflow, retry policy e integração com CRM/notificações.
+### Google Sheets como CRM leve
+
+Google Sheets foi escolhido para manter o projeto reproduzível e acessível. Ele funciona como armazenamento simples e permite inspeção visual dos resultados durante demonstrações.
+
+### Telegram para alertas de alta prioridade
+
+Somente leads classificados como `hot` seguem para a notificação. Isso demonstra roteamento condicional e integração orientada a eventos sem gerar alertas desnecessários.
+
+## Segurança
+
+Credenciais Google OAuth2 e Telegram são armazenadas no gerenciador de credenciais do n8n. O workflow versionado utiliza placeholders e não deve conter tokens, Client Secrets, Chat IDs ou URLs privadas.
+
+## Limites do MVP
+
+Google Sheets é adequado para demonstração e volumes pequenos, mas não substitui um banco transacional em cargas maiores. A deduplicação por consulta também pode sofrer condições de corrida em alto volume.
+
+## Caminho para produção
+
+Uma evolução para produção incluiria autenticação/assinatura do webhook, PostgreSQL ou CRM dedicado, constraint única para e-mail, error workflow, retries, observabilidade, rate limiting e gestão de ambientes/segredos.

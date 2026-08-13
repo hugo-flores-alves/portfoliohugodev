@@ -1,0 +1,51 @@
+{
+  "name": "SupportFlow AI V2 - Intelligent Ticket Triage",
+  "nodes": [
+    {
+      "parameters": {"httpMethod":"POST","path":"supportflow-ai-ticket","responseMode":"lastNode","options":{}},
+      "id":"webhook-ai","name":"Webhook - New AI Ticket","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[120,300],"webhookId":"supportflow-ai-ticket"
+    },
+    {
+      "parameters":{"jsCode":"const input=$json.body ?? $json;\nconst name=String(input.name ?? '').trim();\nconst email=String(input.email ?? '').trim().toLowerCase();\nconst company=String(input.company ?? '').trim();\nconst subject=String(input.subject ?? '').trim();\nconst message=String(input.message ?? '').trim();\nconst errors=[];\nif(!name) errors.push('name is required');\nif(!email || !email.includes('@')) errors.push('valid email is required');\nif(!subject) errors.push('subject is required');\nif(!message) errors.push('message is required');\nif(errors.length) throw new Error(errors.join('; '));\nreturn [{json:{name,email,company,subject,message}}];"},
+      "id":"validate-ai","name":"Validate & Normalize","type":"n8n-nodes-base.code","typeVersion":2,"position":[360,300]
+    },
+    {
+      "parameters":{"method":"POST","url":"https://openrouter.ai/api/v1/chat/completions","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","sendBody":true,"contentType":"raw","rawContentType":"application/json","body":"={\n  \"model\": \"openrouter/free\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Você classifica tickets de suporte. Responda SOMENTE JSON válido, sem markdown, exatamente com as chaves categoria, prioridade, resumo e motivo. categoria deve ser Financeiro, Técnico, Comercial ou Outros. prioridade deve ser Baixa, Média, Alta ou Crítica. Analise o problema principal e o impacto, não apenas palavras isoladas.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Assunto: {{ $json.subject }}\\nMensagem: {{ $json.message }}\"\n    }\n  ]\n}","options":{}},
+      "id":"openrouter-ai","name":"AI Classifier - OpenRouter","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[600,300]
+    },
+    {
+      "parameters":{"jsCode":"const original=$('Validate & Normalize').item.json;\nconst raw=$json?.choices?.[0]?.message?.content;\nif(!raw) throw new Error('AI response content not found');\nlet cleaned=String(raw).trim().replace(/^```json\\s*/i,'').replace(/^```\\s*/,'').replace(/```$/,'').trim();\nlet ai;\ntry { ai=JSON.parse(cleaned); } catch(e) { throw new Error('AI returned invalid JSON: '+cleaned); }\nconst categories=['Financeiro','Técnico','Comercial','Outros'];\nconst priorities=['Baixa','Média','Alta','Crítica'];\nconst normalize=(value,allowed,fallback)=>allowed.find(v=>v.toLowerCase()===String(value??'').trim().toLowerCase()) ?? fallback;\nconst categoria=normalize(ai.categoria,categories,'Outros');\nconst prioridade=normalize(ai.prioridade,priorities,'Média');\nconst now=new Date();\nconst ticket=`SFAI-${now.getTime().toString().slice(-8)}`;\nreturn [{json:{Ticket:ticket,Nome:original.name,Email:original.email,Empresa:original.company,Assunto:original.subject,Mensagem:original.message,Categoria:categoria,Prioridade:prioridade,Status:'Aberto',CriadoEm:now.toISOString(),Resumo:String(ai.resumo??'').trim(),MotivoIA:String(ai.motivo??'').trim()}}];"},
+      "id":"parse-ai","name":"Parse AI Response","type":"n8n-nodes-base.code","typeVersion":2,"position":[840,300]
+    },
+    {
+      "parameters":{"operation":"append","documentId":{"__rl":true,"mode":"url","value":"PASTE_GOOGLE_SHEET_URL_HERE"},"sheetName":{"__rl":true,"mode":"name","value":"Tickets"},"columns":{"mappingMode":"defineBelow","value":{"Ticket":"={{ $json.Ticket }}","Nome":"={{ $json.Nome }}","Email":"={{ $json.Email }}","Empresa":"={{ $json.Empresa }}","Assunto":"={{ $json.Assunto }}","Mensagem":"={{ $json.Mensagem }}","Categoria":"={{ $json.Categoria }}","Prioridade":"={{ $json.Prioridade }}","Status":"={{ $json.Status }}","CriadoEm":"={{ $json.CriadoEm }}"},"matchingColumns":[],"schema":[]},"options":{}},
+      "id":"append-ai","name":"Append AI Ticket","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[1080,300]
+    },
+    {
+      "parameters":{"conditions":{"options":{"caseSensitive":true,"leftValue":"","typeValidation":"strict","version":2},"conditions":[{"id":"critical-ai","leftValue":"={{ $json.Prioridade }}","rightValue":"Crítica","operator":{"type":"string","operation":"equals"}}],"combinator":"and"},"options":{}},
+      "id":"critical-ai","name":"Critical AI Ticket?","type":"n8n-nodes-base.if","typeVersion":2.2,"position":[1320,300]
+    },
+    {
+      "parameters":{"chatId":"PASTE_TELEGRAM_CHAT_ID_HERE","text":"=🤖🚨 TICKET CRÍTICO — IA\n\nTicket: {{ $json.Ticket }}\nCliente: {{ $json.Nome }}\nEmpresa: {{ $json.Empresa || 'Não informada' }}\nEmail: {{ $json.Email }}\nCategoria: {{ $json.Categoria }}\nPrioridade: {{ $json.Prioridade }}\nAssunto: {{ $json.Assunto }}\n\nMensagem:\n{{ $json.Mensagem }}\n\nResumo IA:\n{{ $json.Resumo }}\n\nMotivo da classificação:\n{{ $json.MotivoIA }}","additionalFields":{}},
+      "id":"telegram-ai","name":"AI Critical Alert - Telegram","type":"n8n-nodes-base.telegram","typeVersion":1.2,"position":[1560,200]
+    },
+    {
+      "parameters":{"jsCode":"return items.map(item=>({json:{success:true,ticket:item.json.Ticket,status:item.json.Status,categoria:item.json.Categoria,prioridade:item.json.Prioridade,resumo:item.json.Resumo,classifier:'AI',message:'AI ticket created'}}));"},
+      "id":"response-ai-critical","name":"AI Critical Response","type":"n8n-nodes-base.code","typeVersion":2,"position":[1800,200]
+    },
+    {
+      "parameters":{"jsCode":"return items.map(item=>({json:{success:true,ticket:item.json.Ticket,status:item.json.Status,categoria:item.json.Categoria,prioridade:item.json.Prioridade,resumo:item.json.Resumo,classifier:'AI',message:'AI ticket created'}}));"},
+      "id":"response-ai-normal","name":"AI Ticket Response","type":"n8n-nodes-base.code","typeVersion":2,"position":[1560,420]
+    }
+  ],
+  "connections":{
+    "Webhook - New AI Ticket":{"main":[[{"node":"Validate & Normalize","type":"main","index":0}]]},
+    "Validate & Normalize":{"main":[[{"node":"AI Classifier - OpenRouter","type":"main","index":0}]]},
+    "AI Classifier - OpenRouter":{"main":[[{"node":"Parse AI Response","type":"main","index":0}]]},
+    "Parse AI Response":{"main":[[{"node":"Append AI Ticket","type":"main","index":0}]]},
+    "Append AI Ticket":{"main":[[{"node":"Critical AI Ticket?","type":"main","index":0}]]},
+    "Critical AI Ticket?":{"main":[[{"node":"AI Critical Alert - Telegram","type":"main","index":0}],[{"node":"AI Ticket Response","type":"main","index":0}]]},
+    "AI Critical Alert - Telegram":{"main":[[{"node":"AI Critical Response","type":"main","index":0}]]}
+  },
+  "pinData":{},"active":false,"settings":{"executionOrder":"v1","timezone":"America/Sao_Paulo"},"tags":[]
+}

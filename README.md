@@ -9,22 +9,46 @@ Projetos orientados a problemas reais de negócio, com foco tanto em **vagas de 
 | Projeto | Problema resolvido | Tecnologias | Status |
 |---|---|---|---|
 | [LeadFlow](./projects/leadflow/) | Qualificação, deduplicação, persistência e alerta de leads | n8n, Google Sheets, Telegram, Webhooks, JavaScript | ✅ Funcional |
-| SmartCRM | Organização de pipeline e follow-up | n8n, CRM, automações | 🚧 Próximo |
-| SupportFlow | Atendimento e triagem automatizada | n8n, Telegram, APIs | 🚧 Planejado |
+| [SmartCRM](./projects/smartcrm/) | Pipeline comercial, atualização de leads e follow-ups automáticos | n8n, Google Sheets, Telegram, Schedule Trigger, JavaScript | ✅ Funcional |
+| SupportFlow | Atendimento e triagem automatizada | n8n, Telegram, APIs | 🚧 Próximo |
 | DataSync | Sincronização e transformação entre APIs | n8n, REST APIs, ETL | 🚧 Planejado |
 | AI Assistant | Automação com IA e recuperação de contexto | n8n, LLM, RAG | 🚧 Planejado |
 
-## Projeto em destaque — LeadFlow
+## Projetos funcionais
 
-O LeadFlow é uma automação comercial executável que:
+### LeadFlow
 
 ```text
 Webhook → Validação → Lead Scoring → Deduplicação → Google Sheets → HOT? → Telegram
 ```
 
-Ele recebe leads via HTTP, normaliza e valida os dados, calcula prioridade comercial, evita e-mails duplicados, persiste novos registros e alerta imediatamente quando uma oportunidade recebe classificação `hot`.
+Recebe leads via HTTP, normaliza e valida os dados, calcula prioridade comercial, evita e-mails duplicados, persiste novos registros e alerta imediatamente quando uma oportunidade recebe classificação `hot`.
 
-[Ver documentação do LeadFlow](./projects/leadflow/)
+[Ver LeadFlow](./projects/leadflow/)
+
+### SmartCRM
+
+```text
+Atualização comercial → Busca do lead → Atualização do pipeline
+                                      +
+Schedule → Leitura do CRM → Follow-up vencido? → Telegram
+```
+
+Continua o processo após a captura: atualiza estágio, último contato, próximo follow-up e observações de um lead existente. Um segundo workflow monitora datas de follow-up e envia alertas de pendências no Telegram.
+
+[Ver SmartCRM](./projects/smartcrm/)
+
+## Ecossistema comercial
+
+```text
+                    LEADFLOW
+Formulário → Captura → Scoring → Deduplicação → Google Sheets
+                                                   ↓
+                                                SMARTCRM
+                                      Pipeline → Follow-up → Alertas
+```
+
+Os projetos foram desenhados para funcionar individualmente e também como partes de uma operação comercial automatizada.
 
 ## O que este portfólio demonstra
 
@@ -34,7 +58,9 @@ Ele recebe leads via HTTP, normaliza e valida os dados, calcula prioridade comer
 - Integração com Telegram Bot API
 - Tratamento e transformação de dados
 - Validação e regras de negócio
-- Deduplicação e roteamento condicional
+- Deduplicação e atualização de registros
+- Lógica temporal e workflows agendados
+- Roteamento condicional
 - Gerenciamento seguro de credenciais
 - Documentação técnica e workflows reproduzíveis
 
@@ -44,12 +70,16 @@ Ele recebe leads via HTTP, normaliza e valida os dados, calcula prioridade comer
 portfoliohugodev/
 ├── README.md
 └── projects/
-    └── leadflow/
+    ├── leadflow/
+    │   ├── README.md
+    │   ├── architecture.md
+    │   ├── workflow.json
+    │   ├── workflow-v2.json
+    │   └── sample-payload.json
+    └── smartcrm/
         ├── README.md
-        ├── architecture.md
-        ├── workflow.json
-        ├── workflow-v2.json
-        └── sample-payload.json
+        ├── workflow-update-stage.json
+        └── workflow-followup-monitor.json
 ```
 
 ## Sobre

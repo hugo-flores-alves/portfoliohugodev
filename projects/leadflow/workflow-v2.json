@@ -1,0 +1,55 @@
+{
+  "name": "LeadFlow v2 - CRM Deduplication",
+  "nodes": [
+    {
+      "parameters": {"httpMethod":"POST","path":"leadflow-v2-new-lead","responseMode":"lastNode","options":{}},
+      "id":"webhook-v2","name":"Webhook - New Lead","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[200,300],"webhookId":"leadflow-v2-new-lead"
+    },
+    {
+      "parameters":{"jsCode":"const input = $json.body ?? $json;\nconst name = String(input.name ?? '').trim();\nconst email = String(input.email ?? '').trim().toLowerCase();\nconst company = String(input.company ?? '').trim();\nconst interest = String(input.interest ?? '').trim().toLowerCase();\nconst employees = Number(input.employees ?? 0);\nconst emailValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);\nconst errors=[];\nif(!name) errors.push('name is required');\nif(!email) errors.push('email is required'); else if(!emailValid) errors.push('email is invalid');\nif(errors.length) return [{json:{success:false,errors,receivedAt:new Date().toISOString()}}];\nreturn [{json:{success:true,lead:{name,email,company,interest,employees:Number.isFinite(employees)?employees:0},receivedAt:new Date().toISOString()}}];"},
+      "id":"validate-v2","name":"Validate & Normalize","type":"n8n-nodes-base.code","typeVersion":2,"position":[440,300]
+    },
+    {
+      "parameters":{"jsCode":"const data=$json; if(!data.success) return [{json:data}]; const lead=data.lead; let score=0; if(lead.employees>=10) score+=20; if(lead.employees>=50) score+=20; if(lead.interest==='automation') score+=30; if(lead.interest==='ai') score+=30; if(lead.interest==='integration') score+=25; const classification=score>=60?'hot':score>=30?'warm':'cold'; return [{json:{success:true,lead:{...lead,score,classification},processedAt:new Date().toISOString()}}];"},
+      "id":"score-v2","name":"Lead Scoring","type":"n8n-nodes-base.code","typeVersion":2,"position":[680,300]
+    },
+    {
+      "parameters":{"operation":"read","documentId":{"__rl":true,"mode":"url","value":"PASTE_GOOGLE_SHEET_URL_HERE"},"sheetName":{"__rl":true,"mode":"name","value":"Leads"},"filtersUI":{"values":[{"lookupColumn":"Email","lookupValue":"={{ $('Lead Scoring').item.json.lead.email }}"}]},"options":{}},
+      "id":"lookup-email","name":"Find Existing Email","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[920,300],"alwaysOutputData":true
+    },
+    {
+      "parameters":{"conditions":{"options":{"caseSensitive":true,"leftValue":"","typeValidation":"strict","version":2},"conditions":[{"id":"duplicate-condition","leftValue":"={{ $json.Email }}","rightValue":"","operator":{"type":"string","operation":"exists","singleValue":true}}],"combinator":"and"},"options":{}},
+      "id":"if-duplicate","name":"Email Already Exists?","type":"n8n-nodes-base.if","typeVersion":2.2,"position":[1160,300]
+    },
+    {
+      "parameters":{"jsCode":"const lead=$('Lead Scoring').item.json.lead; return [{json:{success:false,duplicate:true,message:'Lead already exists',email:lead.email}}];"},
+      "id":"duplicate-response","name":"Duplicate Response","type":"n8n-nodes-base.code","typeVersion":2,"position":[1400,180]
+    },
+    {
+      "parameters":{"operation":"append","documentId":{"__rl":true,"mode":"url","value":"PASTE_GOOGLE_SHEET_URL_HERE"},"sheetName":{"__rl":true,"mode":"name","value":"Leads"},"columns":{"mappingMode":"defineBelow","value":{"Nome":"={{ $('Lead Scoring').item.json.lead.name }}","Email":"={{ $('Lead Scoring').item.json.lead.email }}","Empresa":"={{ $('Lead Scoring').item.json.lead.company }}","Interesse":"={{ $('Lead Scoring').item.json.lead.interest }}","Funcionarios":"={{ $('Lead Scoring').item.json.lead.employees }}","Score":"={{ $('Lead Scoring').item.json.lead.score }}","Classificacao":"={{ $('Lead Scoring').item.json.lead.classification }}","Data":"={{ $('Lead Scoring').item.json.processedAt }}"},"matchingColumns":[],"schema":[]},"options":{}},
+      "id":"append-lead","name":"Append New Lead","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[1400,420]
+    },
+    {
+      "parameters":{"conditions":{"options":{"caseSensitive":true,"leftValue":"","typeValidation":"strict","version":2},"conditions":[{"id":"hot-condition","leftValue":"={{ $('Lead Scoring').item.json.lead.classification }}","rightValue":"hot","operator":{"type":"string","operation":"equals"}}],"combinator":"and"},"options":{}},
+      "id":"if-hot","name":"Hot Lead?","type":"n8n-nodes-base.if","typeVersion":2.2,"position":[1640,420]
+    },
+    {
+      "parameters":{"jsCode":"const lead=$('Lead Scoring').item.json.lead; return [{json:{success:true,duplicate:false,saved:true,hot:true,telegramPending:true,message:'Hot lead saved. Configure Telegram node next.',lead}}];"},
+      "id":"hot-placeholder","name":"Hot Lead - Telegram Next","type":"n8n-nodes-base.code","typeVersion":2,"position":[1880,340]
+    },
+    {
+      "parameters":{"jsCode":"const lead=$('Lead Scoring').item.json.lead; return [{json:{success:true,duplicate:false,saved:true,hot:false,message:'Lead saved',lead}}];"},
+      "id":"saved-response","name":"Saved Response","type":"n8n-nodes-base.code","typeVersion":2,"position":[1880,500]
+    }
+  ],
+  "connections":{
+    "Webhook - New Lead":{"main":[[{"node":"Validate & Normalize","type":"main","index":0}]]},
+    "Validate & Normalize":{"main":[[{"node":"Lead Scoring","type":"main","index":0}]]},
+    "Lead Scoring":{"main":[[{"node":"Find Existing Email","type":"main","index":0}]]},
+    "Find Existing Email":{"main":[[{"node":"Email Already Exists?","type":"main","index":0}]]},
+    "Email Already Exists?":{"main":[[{"node":"Duplicate Response","type":"main","index":0}],[{"node":"Append New Lead","type":"main","index":0}]]},
+    "Append New Lead":{"main":[[{"node":"Hot Lead?","type":"main","index":0}]]},
+    "Hot Lead?":{"main":[[{"node":"Hot Lead - Telegram Next","type":"main","index":0}],[{"node":"Saved Response","type":"main","index":0}]]}
+  },
+  "pinData":{},"active":false,"settings":{"executionOrder":"v1"},"tags":[]
+}

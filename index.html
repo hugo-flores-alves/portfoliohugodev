@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="FlowForge Automations — portfólio de automações com n8n, integrações, APIs e IA." />
+  <title>FlowForge Automations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top">FlowForge <span>Automations</span></a>
+    <nav>
+      <a href="#projetos">Projetos</a>
+      <a href="#stack">Stack</a>
+      <a href="#sobre">Sobre</a>
+      <a class="nav-cta" href="https://github.com/hugo-flores-alves/portfoliohugodev" target="_blank" rel="noreferrer">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero section">
+      <div class="hero-copy">
+        <p class="eyebrow">n8n · APIs · IA · Webhooks</p>
+        <h1>Automação que resolve <span>problemas reais.</span></h1>
+        <p class="hero-text">Portfólio de workflows construídos para demonstrar automação comercial, atendimento, integrações e inteligência artificial com foco em aplicações de negócio.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#projetos">Ver projetos</a>
+          <a class="button ghost" href="https://github.com/hugo-flores-alves/portfoliohugodev" target="_blank" rel="noreferrer">Ver código no GitHub</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>3</strong><span>cases funcionais</span></div>
+          <div><strong>n8n</strong><span>orquestração</span></div>
+          <div><strong>AI</strong><span>classificação semântica</span></div>
+        </div>
+      </div>
+      <div class="hero-panel" aria-label="Arquitetura resumida">
+        <div class="terminal-head"><span></span><span></span><span></span></div>
+        <div class="flow-diagram">
+          <div class="flow-node">Webhook</div><div class="flow-arrow">↓</div>
+          <div class="flow-node accent">n8n Workflow</div><div class="flow-arrow">↓</div>
+          <div class="flow-row"><div class="flow-node small">Google Sheets</div><div class="flow-node small">Telegram</div></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-node ai">OpenRouter / LLM</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-title" id="projetos">
+      <p class="eyebrow">Cases</p>
+      <h2>Projetos construídos e testados</h2>
+      <p>Cada projeto parte de um problema de negócio e mostra arquitetura, lógica, integrações e resultado.</p>
+    </section>
+
+    <section class="projects section">
+      <article class="project-card featured">
+        <div class="project-visual visual-lead">
+          <div class="shot-label">Screenshot do workflow</div>
+          <div class="mock-flow">Webhook → Validate → Scoring → Dedup → Sheets → Telegram</div>
+        </div>
+        <div class="project-content">
+          <div class="project-topline"><span class="project-index">01</span><span class="badge">Vendas</span></div>
+          <h3>LeadFlow</h3>
+          <p class="project-subtitle">Captura, qualificação e roteamento automático de leads.</p>
+          <p>Recebe leads por webhook, valida e normaliza dados, calcula score comercial, bloqueia duplicados por e-mail, salva novos contatos no Google Sheets e alerta no Telegram quando o lead é quente.</p>
+          <div class="case-grid">
+            <div><span>Problema</span><strong>Leads desorganizados e sem prioridade</strong></div>
+            <div><span>Solução</span><strong>Scoring + deduplicação + alerta</strong></div>
+          </div>
+          <div class="tags"><span>n8n</span><span>Google Sheets</span><span>Telegram</span><span>JavaScript</span></div>
+          <a class="project-link" href="projects/leadflow/" target="_blank">Ver documentação →</a>
+        </div>
+      </article>
+
+      <article class="project-card">
+        <div class="project-visual visual-crm">
+          <div class="shot-label">Screenshot do workflow</div>
+          <div class="mock-flow">Schedule → Read CRM → Due? → Telegram</div>
+        </div>
+        <div class="project-content">
+          <div class="project-topline"><span class="project-index">02</span><span class="badge">CRM</span></div>
+          <h3>SmartCRM</h3>
+          <p class="project-subtitle">Pipeline comercial e follow-ups automáticos.</p>
+          <p>Atualiza o estágio de leads existentes, registra último contato e próxima ação, e monitora follow-ups vencidos com execução programada e alertas automáticos.</p>
+          <div class="case-grid">
+            <div><span>Problema</span><strong>Oportunidades esquecidas no funil</strong></div>
+            <div><span>Solução</span><strong>Pipeline + agenda + lembretes</strong></div>
+          </div>
+          <div class="tags"><span>n8n</span><span>Schedule Trigger</span><span>Google Sheets</span><span>Telegram</span></div>
+          <a class="project-link" href="projects/smartcrm/" target="_blank">Ver documentação →</a>
+        </div>
+      </article>
+
+      <article class="project-card">
+        <div class="project-visual visual-ai">
+          <div class="shot-label">Screenshot do workflow</div>
+          <div class="mock-flow">Ticket → OpenRouter → JSON → Sheets → Critical?</div>
+        </div>
+        <div class="project-content">
+          <div class="project-topline"><span class="project-index">03</span><span class="badge ai-badge">IA</span></div>
+          <h3>SupportFlow AI</h3>
+          <p class="project-subtitle">Triagem inteligente de tickets com LLM.</p>
+          <p>Classifica solicitações de suporte por categoria e prioridade usando regras determinísticas ou IA via OpenRouter, gera tickets estruturados e alerta imediatamente em casos críticos.</p>
+          <div class="case-grid">
+            <div><span>Problema</span><strong>Triagem manual e incidentes misturados</strong></div>
+            <div><span>Solução</span><strong>Classificação semântica + roteamento</strong></div>
+          </div>
+          <div class="tags"><span>OpenRouter</span><span>LLM</span><span>HTTP API</span><span>n8n</span></div>
+          <a class="project-link" href="projects/supportflow/" target="_blank">Ver documentação →</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section comparison">
+      <div>
+        <p class="eyebrow">Abordagem</p>
+        <h2>Mais do que conectar nodes</h2>
+      </div>
+      <div class="comparison-grid">
+        <div><span>01</span><h4>Entender o processo</h4><p>Partir do problema real antes de escolher ferramentas.</p></div>
+        <div><span>02</span><h4>Modelar regras</h4><p>Validar dados, estados, exceções e decisões de negócio.</p></div>
+        <div><span>03</span><h4>Integrar sistemas</h4><p>Webhooks, APIs, Sheets, Telegram e serviços de IA.</p></div>
+        <div><span>04</span><h4>Documentar</h4><p>Workflows reproduzíveis e credenciais mantidas fora do código.</p></div>
+      </div>
+    </section>
+
+    <section class="section stack" id="stack">
+      <p class="eyebrow">Stack</p>
+      <h2>Tecnologias utilizadas</h2>
+      <div class="stack-list">
+        <span>n8n</span><span>Docker</span><span>JavaScript</span><span>REST APIs</span><span>Webhooks</span><span>Google Sheets</span><span>OAuth 2.0</span><span>Telegram Bot API</span><span>OpenRouter</span><span>LLMs</span>
+      </div>
+    </section>
+
+    <section class="section about" id="sobre">
+      <div>
+        <p class="eyebrow">FlowForge Automations</p>
+        <h2>Portfólio focado em automação aplicada.</h2>
+      </div>
+      <div>
+        <p>Este portfólio demonstra como processos de vendas, atendimento e operações podem ser transformados em workflows automatizados. Os projetos foram construídos com foco em aprendizado prático, freelas e oportunidades profissionais.</p>
+        <a class="button primary" href="https://github.com/hugo-flores-alves/portfoliohugodev" target="_blank" rel="noreferrer">Explorar repositório</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>FlowForge Automations</span>
+    <span>n8n · APIs · IA</span>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

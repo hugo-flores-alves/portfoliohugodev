@@ -1,0 +1,46 @@
+{
+  "name": "SmartCRM - Update Lead Stage",
+  "nodes": [
+    {
+      "parameters": {"httpMethod":"POST","path":"smartcrm-update-lead","responseMode":"lastNode","options":{}},
+      "id":"smartcrm-webhook","name":"Webhook - Update Lead","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[180,300],"webhookId":"smartcrm-update-lead"
+    },
+    {
+      "parameters":{"jsCode":"const input=$json.body ?? $json;\nconst email=String(input.email ?? '').trim().toLowerCase();\nconst rawStatus=String(input.status ?? '').trim();\nconst allowed=['Novo','Contato','Reunião','Proposta','Ganho','Perdido'];\nconst status=allowed.find(s=>s.toLowerCase()===rawStatus.toLowerCase());\nconst followUpDays=Math.max(0,Number(input.followUpDays ?? 0));\nconst observacoes=String(input.observacoes ?? '').trim();\nconst errors=[];\nif(!email) errors.push('email is required');\nif(!status) errors.push('invalid status');\nif(!Number.isFinite(followUpDays)) errors.push('followUpDays must be a number');\nif(errors.length) return [{json:{valid:false,errors}}];\nconst now=new Date();\nlet next='';\nif(!['Ganho','Perdido'].includes(status) && followUpDays>0){ const d=new Date(now); d.setDate(d.getDate()+followUpDays); next=d.toISOString(); }\nreturn [{json:{valid:true,email,status,observacoes,ultimoContato:now.toISOString(),proximoFollowUp:next}}];"},
+      "id":"validate-crm","name":"Validate CRM Update","type":"n8n-nodes-base.code","typeVersion":2,"position":[420,300]
+    },
+    {
+      "parameters":{"operation":"read","documentId":{"__rl":true,"mode":"url","value":"PASTE_GOOGLE_SHEET_URL_HERE"},"sheetName":{"__rl":true,"mode":"name","value":"Leads"},"filtersUI":{"values":[{"lookupColumn":"Email","lookupValue":"={{ $('Validate CRM Update').item.json.email }}"}]},"options":{}},
+      "id":"find-lead","name":"Find Lead by Email","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[660,300],"alwaysOutputData":true
+    },
+    {
+      "parameters":{"conditions":{"options":{"caseSensitive":false,"leftValue":"","typeValidation":"strict","version":2},"conditions":[{"id":"exists","leftValue":"={{ $json.Email }}","rightValue":"","operator":{"type":"string","operation":"exists","singleValue":true}}],"combinator":"and"},"options":{}},
+      "id":"lead-exists","name":"Lead Exists?","type":"n8n-nodes-base.if","typeVersion":2.2,"position":[900,300]
+    },
+    {
+      "parameters":{"jsCode":"const req=$('Validate CRM Update').item.json; return [{json:{success:false,message:'Lead not found',email:req.email}}];"},
+      "id":"not-found","name":"Not Found Response","type":"n8n-nodes-base.code","typeVersion":2,"position":[1140,440]
+    },
+    {
+      "parameters":{"jsCode":"const row=$json; const req=$('Validate CRM Update').item.json; return [{json:{...row,Status:req.status,UltimoContato:req.ultimoContato,ProximoFollowUp:req.proximoFollowUp,Observacoes:req.observacoes}}];"},
+      "id":"build-update","name":"Build Updated Record","type":"n8n-nodes-base.code","typeVersion":2,"position":[1140,220]
+    },
+    {
+      "parameters":{"operation":"update","documentId":{"__rl":true,"mode":"url","value":"PASTE_GOOGLE_SHEET_URL_HERE"},"sheetName":{"__rl":true,"mode":"name","value":"Leads"},"columns":{"mappingMode":"defineBelow","value":{"Email":"={{ $json.Email }}","Status":"={{ $json.Status }}","UltimoContato":"={{ $json.UltimoContato }}","ProximoFollowUp":"={{ $json.ProximoFollowUp }}","Observacoes":"={{ $json.Observacoes }}"},"matchingColumns":["Email"],"schema":[]},"options":{}},
+      "id":"update-sheet","name":"Update Lead","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[1380,220]
+    },
+    {
+      "parameters":{"jsCode":"const req=$('Validate CRM Update').item.json; return [{json:{success:true,message:'Lead updated',email:req.email,status:req.status,ultimoContato:req.ultimoContato,proximoFollowUp:req.proximoFollowUp,observacoes:req.observacoes}}];"},
+      "id":"updated-response","name":"Update Response","type":"n8n-nodes-base.code","typeVersion":2,"position":[1620,220]
+    }
+  ],
+  "connections":{
+    "Webhook - Update Lead":{"main":[[{"node":"Validate CRM Update","type":"main","index":0}]]},
+    "Validate CRM Update":{"main":[[{"node":"Find Lead by Email","type":"main","index":0}]]},
+    "Find Lead by Email":{"main":[[{"node":"Lead Exists?","type":"main","index":0}]]},
+    "Lead Exists?":{"main":[[{"node":"Build Updated Record","type":"main","index":0}],[{"node":"Not Found Response","type":"main","index":0}]]},
+    "Build Updated Record":{"main":[[{"node":"Update Lead","type":"main","index":0}]]},
+    "Update Lead":{"main":[[{"node":"Update Response","type":"main","index":0}]]}
+  },
+  "pinData":{},"active":false,"settings":{"executionOrder":"v1"},"tags":[]
+}

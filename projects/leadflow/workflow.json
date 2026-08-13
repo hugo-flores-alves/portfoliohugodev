@@ -1,0 +1,57 @@
+{
+  "name": "LeadFlow - Automated Lead Qualification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "leadflow-new-lead",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "leadflow-webhook",
+      "name": "Webhook - New Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300],
+      "webhookId": "leadflow-new-lead"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $json.body ?? $json;\n\nconst name = String(input.name ?? '').trim();\nconst email = String(input.email ?? '').trim().toLowerCase();\nconst company = String(input.company ?? '').trim();\nconst interest = String(input.interest ?? '').trim().toLowerCase();\nconst employees = Number(input.employees ?? 0);\n\nconst emailValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);\nconst errors = [];\nif (!name) errors.push('name is required');\nif (!email) errors.push('email is required');\nelse if (!emailValid) errors.push('email is invalid');\n\nif (errors.length) {\n  return [{ json: { success: false, errors, receivedAt: new Date().toISOString() } }];\n}\n\nreturn [{ json: { success: true, lead: { name, email, company, interest, employees: Number.isFinite(employees) ? employees : 0 }, receivedAt: new Date().toISOString() } }];"
+      },
+      "id": "validate-normalize",
+      "name": "Validate & Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\nif (!data.success) return [{ json: data }];\n\nconst lead = data.lead;\nlet score = 0;\nif (lead.employees >= 10) score += 20;\nif (lead.employees >= 50) score += 20;\nif (lead.interest === 'automation') score += 30;\nif (lead.interest === 'ai') score += 30;\nif (lead.interest === 'integration') score += 25;\n\nconst classification = score >= 60 ? 'hot' : score >= 30 ? 'warm' : 'cold';\n\nreturn [{ json: { success: true, lead: { ...lead, score, classification }, processedAt: new Date().toISOString() } }];"
+      },
+      "id": "lead-scoring",
+      "name": "Lead Scoring",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [740, 300]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - New Lead": {
+      "main": [[{"node": "Validate & Normalize", "type": "main", "index": 0}]]
+    },
+    "Validate & Normalize": {
+      "main": [[{"node": "Lead Scoring", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "11111111-2222-4333-8444-555555555555",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

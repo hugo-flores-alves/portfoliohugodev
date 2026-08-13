@@ -1,0 +1,131 @@
+{
+  "name": "SmartCRM - Follow-up Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "schedule-daily",
+      "name": "Daily Follow-up Check",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "PASTE_GOOGLE_SHEET_URL_HERE"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "options": {}
+      },
+      "id": "read-leads",
+      "name": "Read CRM Leads",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst closed = new Set(['ganho','perdido']);\nconst due = [];\nfor (const item of items) {\n  const row = item.json;\n  const status = String(row.Status ?? '').trim().toLowerCase();\n  const followUpRaw = String(row.ProximoFollowUp ?? '').trim();\n  if (!followUpRaw || closed.has(status)) continue;\n  const followUp = new Date(followUpRaw);\n  if (Number.isNaN(followUp.getTime())) continue;\n  if (followUp <= now) {\n    due.push({ json: { ...row, followUpDue: true, checkedAt: now.toISOString() } });\n  }\n}\nreturn due;"
+      },
+      "id": "filter-due",
+      "name": "Find Overdue Follow-ups",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-due",
+              "leftValue": "={{ $json.followUpDue }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-due",
+      "name": "Follow-up Due?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [920, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "PASTE_TELEGRAM_CHAT_ID_HERE",
+        "text": "=⚠️ Follow-up pendente!\n\nNome: {{ $json.Nome }}\nEmpresa: {{ $json.Empresa }}\nEmail: {{ $json.Email }}\nStatus: {{ $json.Status }}\nClassificação: {{ $json.Classificacao }}\nScore: {{ $json.Score }}\nPróximo follow-up: {{ $json.ProximoFollowUp }}\nObservações: {{ $json.Observacoes || 'Sem observações' }}",
+        "additionalFields": {}
+      },
+      "id": "telegram-alert",
+      "name": "Send Follow-up Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1160, 220]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => ({ json: { success: true, alerted: true, email: item.json.Email, checkedAt: item.json.checkedAt } }));"
+      },
+      "id": "alert-response",
+      "name": "Alert Logged",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1400, 220]
+    }
+  ],
+  "connections": {
+    "Daily Follow-up Check": {
+      "main": [[{"node": "Read CRM Leads", "type": "main", "index": 0}]]
+    },
+    "Read CRM Leads": {
+      "main": [[{"node": "Find Overdue Follow-ups", "type": "main", "index": 0}]]
+    },
+    "Find Overdue Follow-ups": {
+      "main": [[{"node": "Follow-up Due?", "type": "main", "index": 0}]]
+    },
+    "Follow-up Due?": {
+      "main": [[{"node": "Send Follow-up Alert", "type": "main", "index": 0}], []]
+    },
+    "Send Follow-up Alert": {
+      "main": [[{"node": "Alert Logged", "type": "main", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo"
+  },
+  "tags": []
+}

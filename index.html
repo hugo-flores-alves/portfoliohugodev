@@ -11,133 +11,36 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#top">FlowForge <span>Automations</span></a>
-    <nav>
-      <a href="#projetos">Projetos</a>
-      <a href="demos/">Demos</a>
-      <a href="#stack">Stack</a>
-      <a href="#sobre">Sobre</a>
-      <a class="nav-cta" href="https://github.com/hugo-flores-alves/portfoliohugodev" target="_blank" rel="noreferrer">GitHub</a>
-    </nav>
-  </header>
-
-  <main id="top">
-    <section class="hero section">
-      <div class="hero-copy">
-        <p class="eyebrow">n8n · APIs · IA · Webhooks</p>
-        <h1>Automação que resolve <span>problemas reais.</span></h1>
-        <p class="hero-text">Soluções demonstrativas para vendas, CRM e suporte, com dashboards que mostram o resultado para o cliente final e documentação técnica para quem quer ver como foi construído.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#projetos">Ver soluções</a>
-          <a class="button ghost" href="demos/">Explorar dashboards</a>
-        </div>
-        <div class="hero-stats">
-          <div><strong>3</strong><span>cases funcionais</span></div>
-          <div><strong>3</strong><span>demos visuais</span></div>
-          <div><strong>AI</strong><span>classificação semântica</span></div>
-        </div>
-      </div>
-      <div class="hero-panel" aria-label="Resumo das soluções">
-        <div class="terminal-head"><span></span><span></span><span></span></div>
-        <div class="flow-diagram">
-          <div class="flow-node">LeadFlow · Qualificação</div><div class="flow-arrow">↓</div>
-          <div class="flow-node accent">SmartCRM · Follow-up</div><div class="flow-arrow">↓</div>
-          <div class="flow-node ai">SupportFlow AI · Triagem</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-title" id="projetos">
-      <p class="eyebrow">Soluções</p>
-      <h2>Veja primeiro o resultado. Depois, a tecnologia.</h2>
-      <p>Cada case possui uma demonstração visual com dados fictícios para mostrar como a automação seria percebida por uma empresa.</p>
-    </section>
-
-    <section class="projects section">
-      <article class="project-card featured">
-        <div class="project-visual visual-lead">
-          <div class="shot-label">Demonstração comercial</div>
-          <div class="mock-flow">12 leads hoje · 3 HOT · score médio 68 · 4 duplicados bloqueados</div>
-        </div>
-        <div class="project-content">
-          <div class="project-topline"><span class="project-index">01</span><span class="badge">Vendas</span></div>
-          <h3>LeadFlow</h3>
-          <p class="project-subtitle">Pare de perder seus melhores leads.</p>
-          <p>Captura, organiza e identifica automaticamente quem tem maior potencial de compra. Leads quentes recebem prioridade e podem gerar alertas imediatos para o time comercial.</p>
-          <div class="case-grid">
-            <div><span>Problema</span><strong>Leads desorganizados e sem prioridade</strong></div>
-            <div><span>Resultado</span><strong>Qualificação, deduplicação e alerta automático</strong></div>
-          </div>
-          <div class="tags"><span>n8n</span><span>Google Sheets</span><span>Telegram</span><span>JavaScript</span></div>
-          <div class="hero-actions">
-            <a class="button primary" href="demos/leadflow.html">Ver demonstração</a>
-            <a class="button ghost" href="projects/leadflow/" target="_blank">Como foi construído</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="project-card">
-        <div class="project-visual visual-crm">
-          <div class="shot-label">Demonstração de CRM</div>
-          <div class="mock-flow">18 oportunidades · R$ 84 mil em proposta · 4 follow-ups hoje</div>
-        </div>
-        <div class="project-content">
-          <div class="project-topline"><span class="project-index">02</span><span class="badge">CRM</span></div>
-          <h3>SmartCRM</h3>
-          <p class="project-subtitle">Nenhuma oportunidade esquecida.</p>
-          <p>Organiza o pipeline comercial, registra próximas ações e monitora automaticamente quem precisa de contato novamente.</p>
-          <div class="case-grid">
-            <div><span>Problema</span><strong>Oportunidades esquecidas no funil</strong></div>
-            <div><span>Resultado</span><strong>Pipeline organizado e follow-ups automáticos</strong></div>
-          </div>
-          <div class="tags"><span>n8n</span><span>Schedule Trigger</span><span>Google Sheets</span><span>Telegram</span></div>
-          <div class="hero-actions">
-            <a class="button primary" href="demos/smartcrm.html">Ver demonstração</a>
-            <a class="button ghost" href="projects/smartcrm/" target="_blank">Como foi construído</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="project-card">
-        <div class="project-visual visual-ai">
-          <div class="shot-label">Demonstração com IA</div>
-          <div class="mock-flow">8 tickets abertos · 2 críticos · 100% triagem automática · &lt;5s</div>
-        </div>
-        <div class="project-content">
-          <div class="project-topline"><span class="project-index">03</span><span class="badge ai-badge">IA</span></div>
-          <h3>SupportFlow AI</h3>
-          <p class="project-subtitle">Sua IA lê o chamado antes da equipe.</p>
-          <p>Entende o problema, identifica categoria e prioridade, registra o ticket e coloca casos críticos na frente da fila.</p>
-          <div class="case-grid">
-            <div><span>Problema</span><strong>Triagem manual e incidentes misturados</strong></div>
-            <div><span>Resultado</span><strong>Classificação semântica e roteamento crítico</strong></div>
-          </div>
-          <div class="tags"><span>OpenRouter</span><span>LLM</span><span>HTTP API</span><span>n8n</span></div>
-          <div class="hero-actions">
-            <a class="button primary" href="demos/supportflow.html">Ver demonstração</a>
-            <a class="button ghost" href="projects/supportflow/" target="_blank">Como foi construído</a>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="section comparison">
-      <div><p class="eyebrow">Abordagem</p><h2>Benefício primeiro. Tecnologia depois.</h2></div>
-      <div class="comparison-grid">
-        <div><span>01</span><h4>Problema de negócio</h4><p>Começar pelo que precisa melhorar na operação.</p></div>
-        <div><span>02</span><h4>Experiência visual</h4><p>Mostrar como a solução aparece para o cliente final.</p></div>
-        <div><span>03</span><h4>Automação real</h4><p>Webhooks, APIs, Sheets, Telegram e IA por trás da interface.</p></div>
-        <div><span>04</span><h4>Prova técnica</h4><p>Documentação e workflows disponíveis para análise no GitHub.</p></div>
-      </div>
-    </section>
-
-    <section class="section stack" id="stack"><p class="eyebrow">Stack</p><h2>Tecnologias utilizadas</h2><div class="stack-list"><span>n8n</span><span>Docker</span><span>JavaScript</span><span>REST APIs</span><span>Webhooks</span><span>Google Sheets</span><span>OAuth 2.0</span><span>Telegram Bot API</span><span>OpenRouter</span><span>LLMs</span></div></section>
-
-    <section class="section about" id="sobre"><div><p class="eyebrow">FlowForge Automations</p><h2>Portfólio focado em automação aplicada.</h2></div><div><p>Os dashboards usam dados fictícios para demonstrar a experiência e o valor das soluções. Os workflows reais, integrações e documentação técnica permanecem disponíveis no repositório.</p><a class="button primary" href="demos/">Abrir todas as demonstrações</a></div></section>
-  </main>
-
-  <footer><span>FlowForge Automations</span><span>n8n · APIs · IA</span></footer>
-  <script src="script.js"></script>
+<header class="topbar">
+  <a class="brand" href="#top">FlowForge <span>Automations</span></a>
+  <nav><a href="#projetos">Projetos</a><a href="demos/">Demos</a><a href="#stack">Stack</a><a href="#sobre">Sobre</a><a class="nav-cta" href="https://github.com/hugo-flores-alves/portfoliohugodev" target="_blank" rel="noreferrer">GitHub</a></nav>
+</header>
+<main id="top">
+<section class="hero section">
+  <div class="hero-copy">
+    <p class="eyebrow">n8n · APIs · IA · Automação</p>
+    <h1>Automação que resolve <span>problemas reais.</span></h1>
+    <p class="hero-text">Sistemas funcionais para prospecção, vendas, CRM e suporte, integrando dados, APIs e inteligência artificial.</p>
+    <div class="hero-actions"><a class="button primary" href="#projetos">Ver soluções</a><a class="button ghost" href="https://github.com/hugo-flores-alves/portfoliohugodev" target="_blank">Ver GitHub</a></div>
+    <div class="hero-stats"><div><strong>4</strong><span>cases funcionais</span></div><div><strong>AI</strong><span>qualificação inteligente</span></div><div><strong>API</strong><span>integrações reais</span></div></div>
+  </div>
+  <div class="hero-panel" aria-label="Resumo das soluções"><div class="terminal-head"><span></span><span></span><span></span></div><div class="flow-diagram"><div class="flow-node ai">Prospectador AI · Aquisição</div><div class="flow-arrow">↓</div><div class="flow-node">LeadFlow · Qualificação</div><div class="flow-arrow">↓</div><div class="flow-node accent">SmartCRM · Follow-up</div><div class="flow-arrow">↓</div><div class="flow-node ai">SupportFlow AI · Triagem</div></div></div>
+</section>
+<section class="section section-title" id="projetos"><p class="eyebrow">Soluções</p><h2>Projetos construídos para operações reais.</h2><p>Da descoberta de empresas ao acompanhamento comercial e suporte automatizado.</p></section>
+<section class="projects section">
+  <article class="project-card featured">
+    <div class="project-visual visual-ai"><div class="shot-label">NOVO · MVP VALIDADO</div><div class="mock-flow">Google Maps → Apify → n8n → OpenAI → CRM → Fila Comercial</div></div>
+    <div class="project-content"><div class="project-topline"><span class="project-index">01</span><span class="badge ai-badge">IA + Prospecção</span></div><h3>Prospectador AI</h3><p class="project-subtitle">Transforma buscas em uma fila comercial priorizada.</p><p>Descobre empresas por nicho e localização, normaliza dados, aplica pré-qualificação e usa IA para avaliar ICP, oportunidade e evidências antes da abordagem comercial.</p><div class="case-grid"><div><span>Problema</span><strong>Prospecção manual e listas sem prioridade</strong></div><div><span>Resultado</span><strong>Leads classificados em A+, A, B, C e D no CRM</strong></div></div><div class="tags"><span>n8n</span><span>Apify</span><span>OpenAI</span><span>Google Sheets</span><span>JavaScript</span></div><div class="hero-actions"><a class="button primary" href="projects/prospectador-ai/">Ver projeto</a><a class="button ghost" href="projects/prospectador-ai/workflow-sanitized.json" target="_blank">Arquitetura pública</a></div></div>
+  </article>
+  <article class="project-card"><div class="project-visual visual-lead"><div class="shot-label">Automação comercial</div><div class="mock-flow">Captura → scoring → deduplicação → alerta</div></div><div class="project-content"><div class="project-topline"><span class="project-index">02</span><span class="badge">Vendas</span></div><h3>LeadFlow</h3><p class="project-subtitle">Pare de perder seus melhores leads.</p><p>Captura, organiza e identifica automaticamente quem tem maior potencial de compra.</p><div class="tags"><span>n8n</span><span>Google Sheets</span><span>Telegram</span><span>JavaScript</span></div><div class="hero-actions"><a class="button primary" href="demos/leadflow.html">Ver demonstração</a><a class="button ghost" href="projects/leadflow/">Documentação</a></div></div></article>
+  <article class="project-card"><div class="project-visual visual-crm"><div class="shot-label">CRM</div><div class="mock-flow">Pipeline → próximo contato → follow-up → alerta</div></div><div class="project-content"><div class="project-topline"><span class="project-index">03</span><span class="badge">CRM</span></div><h3>SmartCRM</h3><p class="project-subtitle">Nenhuma oportunidade esquecida.</p><p>Organiza o pipeline comercial e monitora automaticamente quem precisa de contato novamente.</p><div class="tags"><span>n8n</span><span>Google Sheets</span><span>Schedule Trigger</span><span>Telegram</span></div><div class="hero-actions"><a class="button primary" href="demos/smartcrm.html">Ver demonstração</a><a class="button ghost" href="projects/smartcrm/">Documentação</a></div></div></article>
+  <article class="project-card"><div class="project-visual visual-ai"><div class="shot-label">Atendimento com IA</div><div class="mock-flow">Ticket → IA → classificação → prioridade → alerta</div></div><div class="project-content"><div class="project-topline"><span class="project-index">04</span><span class="badge ai-badge">IA</span></div><h3>SupportFlow AI</h3><p class="project-subtitle">Sua IA lê o chamado antes da equipe.</p><p>Entende o problema, identifica categoria e prioridade e coloca casos críticos na frente da fila.</p><div class="tags"><span>LLM</span><span>HTTP API</span><span>n8n</span><span>Google Sheets</span></div><div class="hero-actions"><a class="button primary" href="demos/supportflow.html">Ver demonstração</a><a class="button ghost" href="projects/supportflow/">Documentação</a></div></div></article>
+</section>
+<section class="section comparison"><div><p class="eyebrow">Abordagem</p><h2>Do problema ao resultado.</h2></div><div class="comparison-grid"><div><span>01</span><h4>Problema real</h4><p>Automatizar uma dor operacional concreta.</p></div><div><span>02</span><h4>Dados</h4><p>Coletar, validar e organizar informações úteis.</p></div><div><span>03</span><h4>Automação + IA</h4><p>Aplicar regras, APIs e modelos onde geram valor.</p></div><div><span>04</span><h4>Resultado</h4><p>Entregar dados acionáveis para a operação.</p></div></div></section>
+<section class="section stack" id="stack"><p class="eyebrow">Stack</p><h2>Tecnologias utilizadas</h2><div class="stack-list"><span>n8n</span><span>Apify</span><span>OpenAI</span><span>Docker</span><span>JavaScript</span><span>REST APIs</span><span>Webhooks</span><span>Google Sheets</span><span>OAuth 2.0</span><span>Telegram Bot API</span><span>LLMs</span></div></section>
+<section class="section about" id="sobre"><div><p class="eyebrow">FlowForge Automations</p><h2>Portfólio focado em automação aplicada.</h2></div><div><p>Os projetos demonstram automações funcionais, integrações reais e uso responsável de IA. Credenciais e chaves privadas nunca são publicadas.</p><a class="button primary" href="https://github.com/hugo-flores-alves/portfoliohugodev" target="_blank">Explorar código e documentação</a></div></section>
+</main>
+<footer><span>FlowForge Automations</span><span>n8n · APIs · IA</span></footer>
+<script src="script.js"></script>
 </body>
 </html>

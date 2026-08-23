@@ -1,0 +1,41 @@
+{
+  "name": "Prospectador AI - Public Architecture",
+  "description": "Versão pública sanitizada do workflow. Credenciais e identificadores privados não são versionados.",
+  "pipeline": [
+    "Manual Trigger",
+    "Configurar busca",
+    "Iniciar Apify Google Maps Scraper",
+    "Aguardar execução",
+    "Consultar status",
+    "Buscar dataset",
+    "Normalizar e aplicar ICP",
+    "Filtrar pré-qualificados",
+    "Preparar prompt OpenAI",
+    "Analisar lead com OpenAI",
+    "Interpretar JSON estruturado",
+    "Classificar fila comercial",
+    "Salvar no CRM",
+    "Filtrar Tier A/A+",
+    "Salvar na fila comercial"
+  ],
+  "integrations": {
+    "apify": {
+      "credential": "CONFIGURE_IN_N8N",
+      "token": "${APIFY_TOKEN}"
+    },
+    "openai": {
+      "credential": "CONFIGURE_IN_N8N",
+      "api_key": "${OPENAI_API_KEY}"
+    },
+    "google_sheets": {
+      "credential": "CONFIGURE_IN_N8N",
+      "spreadsheet_id": "${GOOGLE_SHEET_ID}",
+      "sheets": ["Leads", "Fila Comercial"]
+    }
+  },
+  "security": {
+    "secrets_committed": false,
+    "human_approval_before_outreach": true,
+    "ai_claims_require_evidence": true
+  }
+}

@@ -1,0 +1,15 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prospectador AI | Hugo Flores Alves</title><link rel="stylesheet" href="../../styles.css"><style>.case{max-width:900px}.case h1{font-size:clamp(46px,7vw,78px);line-height:1;letter-spacing:-.06em;margin:0 0 24px}.case h2{font-size:30px;letter-spacing:-.03em;margin-top:60px}.case p,.case li{color:var(--muted)}.case .lead{font-size:20px}.architecture{border:1px solid var(--line);background:var(--surface);padding:28px;border-radius:16px;font-family:ui-monospace,monospace;color:#b7c1ce;white-space:pre-line}.back{display:inline-block;margin:30px 24px;color:var(--green)}</style></head><body><a class="back" href="../../">← Voltar ao portfólio</a><main class="section case"><p class="eyebrow">CASE STUDY · IA + PROSPECÇÃO</p><h1>Prospectador AI</h1><p class="lead">Sistema de prospecção B2B que transforma uma busca por nicho e localização em uma fila comercial organizada e priorizada.</p><div class="hero-actions"><a class="button primary" href="../../#contato">Quero uma automação parecida</a><a class="button ghost" href="workflow-sanitized.json" target="_blank">Ver arquitetura pública</a></div><h2>O problema</h2><p>Pesquisar empresas manualmente consome tempo e normalmente produz listas extensas sem prioridade. O projeto foi criado para automatizar descoberta, organização e pré-qualificação antes da abordagem comercial.</p><h2>Como funciona</h2><div class="architecture">Nicho + localização
+↓
+Google Maps / Apify
+↓
+Normalização + deduplicação
+↓
+Pré-score e filtro de ICP
+↓
+OpenAI · ICP Score + Opportunity Score
+↓
+Tier A+ / A / B / C / D
+↓
+Google Sheets CRM
+↓
+Fila comercial + aprovação humana</div><h2>O que foi implementado</h2><ul><li>Pesquisa de empresas por nicho e região.</li><li>Normalização e remoção de registros inadequados ou duplicados.</li><li>Pré-qualificação antes do uso de IA.</li><li>Análise de aderência ao ICP e oportunidade comercial.</li><li>Classificação em tiers e geração de hipótese de oportunidade.</li><li>Registro estruturado no Google Sheets.</li><li>Aprovação humana antes de qualquer contato comercial.</li></ul><h2>Validação</h2><p>O MVP foi validado ponta a ponta com coleta de estabelecimentos, processamento no n8n, scoring, análise por IA e gravação dos resultados no CRM.</p><h2>Stack</h2><div class="stack-list"><span>n8n</span><span>Apify</span><span>OpenAI</span><span>Google Sheets</span><span>JavaScript</span><span>REST APIs</span></div></main></body></html>

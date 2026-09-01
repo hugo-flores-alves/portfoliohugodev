@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SmartCRM | Hugo Flores Alves</title><link rel="stylesheet" href="../../styles.css"><style>.case{max-width:900px}.case h1{font-size:clamp(46px,7vw,78px);line-height:1;letter-spacing:-.06em;margin:0 0 24px}.case h2{font-size:30px;letter-spacing:-.03em;margin-top:60px}.case p,.case li{color:var(--muted)}.case .lead{font-size:20px}.architecture{border:1px solid var(--line);background:var(--surface);padding:28px;border-radius:16px;font-family:ui-monospace,monospace;color:#b7c1ce;white-space:pre-line}.back{display:inline-block;margin:30px 24px;color:var(--green)}</style></head><body><a class="back" href="../../">← Voltar ao portfólio</a><main class="section case"><p class="eyebrow">CASE STUDY · CRM + FOLLOW-UP</p><h1>SmartCRM</h1><p class="lead">Pipeline comercial leve que atualiza oportunidades e monitora automaticamente os contatos que precisam de follow-up.</p><div class="hero-actions"><a class="button primary" href="../../demos/smartcrm.html">Explorar dashboard</a><a class="button ghost" href="../../#contato">Falar sobre um projeto</a></div><h2>O problema</h2><p>Depois da captação, oportunidades podem esfriar porque o estágio da negociação e a próxima ação ficam espalhados ou dependem da memória da equipe.</p><h2>Como funciona</h2><div class="architecture">Lead qualificado
+↓
+Pipeline comercial
+↓
+Atualização de estágio
+↓
+Último contato + próximo follow-up
+↓
+Monitor agendado
+↓
+Pendência vencida? → Telegram</div><h2>O que foi implementado</h2><ul><li>Atualização de registros existentes pelo e-mail.</li><li>Pipeline: Novo, Contato, Reunião, Proposta, Ganho e Perdido.</li><li>Registro de último contato, próximo follow-up e observações.</li><li>Monitor agendado de follow-ups vencidos.</li><li>Tratamento de diferentes formatos de data.</li><li>Alertas automáticos no Telegram.</li></ul><h2>Validação</h2><p>O fluxo localizou leads existentes, atualizou a mesma linha no CRM e identificou follow-ups vencidos, enviando o alerta correspondente para o Telegram.</p><h2>Stack</h2><div class="stack-list"><span>n8n</span><span>Google Sheets</span><span>JavaScript</span><span>Schedule Trigger</span><span>Telegram API</span><span>Webhooks</span></div></main></body></html>

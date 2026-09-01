@@ -1,0 +1,13 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LeadFlow | Hugo Flores Alves</title><link rel="stylesheet" href="../../styles.css"><style>.case{max-width:900px}.case h1{font-size:clamp(46px,7vw,78px);line-height:1;letter-spacing:-.06em;margin:0 0 24px}.case h2{font-size:30px;letter-spacing:-.03em;margin-top:60px}.case p,.case li{color:var(--muted)}.case .lead{font-size:20px}.architecture{border:1px solid var(--line);background:var(--surface);padding:28px;border-radius:16px;font-family:ui-monospace,monospace;color:#b7c1ce;white-space:pre-line}.back{display:inline-block;margin:30px 24px;color:var(--green)}</style></head><body><a class="back" href="../../">← Voltar ao portfólio</a><main class="section case"><p class="eyebrow">CASE STUDY · AUTOMAÇÃO COMERCIAL</p><h1>LeadFlow</h1><p class="lead">Automação que recebe leads, valida dados, evita duplicados, calcula prioridade e alerta o comercial quando surge uma oportunidade quente.</p><div class="hero-actions"><a class="button primary" href="../../demos/leadflow.html">Explorar dashboard</a><a class="button ghost" href="../../#contato">Falar sobre um projeto</a></div><h2>O problema</h2><p>Formulários comerciais frequentemente geram dados inconsistentes, contatos duplicados e uma fila sem prioridade. Isso faz o time gastar energia decidindo quem atender primeiro.</p><h2>Como funciona</h2><div class="architecture">Webhook
+↓
+Validação + normalização
+↓
+Lead scoring
+↓
+Busca por e-mail
+↓
+Deduplicação
+↓
+Google Sheets
+↓
+Lead HOT? → alerta no Telegram</div><h2>O que foi implementado</h2><ul><li>Webhook HTTP para entrada de leads.</li><li>Validação e normalização de nome, e-mail e demais campos.</li><li>Scoring determinístico e classificação cold, warm ou hot.</li><li>Deduplicação por e-mail.</li><li>Persistência no Google Sheets.</li><li>Alerta automático via Telegram para leads hot.</li></ul><h2>Validação</h2><p>Foram testados cenários de lead novo, lead duplicado e lead com score alto. O fluxo registra apenas contatos válidos e dispara o alerta quando a regra de prioridade é atendida.</p><h2>Stack</h2><div class="stack-list"><span>n8n</span><span>Docker</span><span>JavaScript</span><span>Webhooks</span><span>Google Sheets</span><span>Telegram API</span></div></main></body></html>

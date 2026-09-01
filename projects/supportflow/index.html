@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SupportFlow AI | Hugo Flores Alves</title><link rel="stylesheet" href="../../styles.css"><style>.case{max-width:900px}.case h1{font-size:clamp(46px,7vw,78px);line-height:1;letter-spacing:-.06em;margin:0 0 24px}.case h2{font-size:30px;letter-spacing:-.03em;margin-top:60px}.case p,.case li{color:var(--muted)}.case .lead{font-size:20px}.architecture{border:1px solid var(--line);background:var(--surface);padding:28px;border-radius:16px;font-family:ui-monospace,monospace;color:#b7c1ce;white-space:pre-line}.back{display:inline-block;margin:30px 24px;color:var(--green)}</style></head><body><a class="back" href="../../">← Voltar ao portfólio</a><main class="section case"><p class="eyebrow">CASE STUDY · SUPORTE + IA</p><h1>SupportFlow AI</h1><p class="lead">Automação de triagem que transforma mensagens de suporte em tickets estruturados, identifica prioridade e alerta a equipe em casos críticos.</p><div class="hero-actions"><a class="button primary" href="../../demos/supportflow.html">Explorar dashboard</a><a class="button ghost" href="../../#contato">Falar sobre um projeto</a></div><h2>O problema</h2><p>Antes de resolver um chamado, equipes de suporte precisam ler, interpretar e priorizar cada solicitação. Casos críticos podem acabar misturados com dúvidas simples.</p><h2>Como funciona</h2><div class="architecture">Webhook
+↓
+Validação + normalização
+↓
+Classificação por IA
+↓
+Parsing e validação
+↓
+Registro do ticket
+↓
+Caso crítico? → alerta no Telegram</div><h2>O que foi implementado</h2><ul><li>Versão determinística baseada em regras e palavras-chave.</li><li>Versão com classificação semântica via LLM.</li><li>Categoria, prioridade, resumo e motivo estruturados.</li><li>Validação da resposta da IA antes do roteamento.</li><li>Persistência dos tickets.</li><li>Alerta imediato para chamados críticos.</li></ul><h2>Validação</h2><p>Foram testados tickets críticos e comuns. A integração com IA recebeu classificação estruturada e o fluxo crítico gerou alerta automático para a equipe.</p><h2>Stack</h2><div class="stack-list"><span>n8n</span><span>LLM</span><span>OpenRouter</span><span>HTTP API</span><span>Google Sheets</span><span>Telegram API</span></div></main></body></html>
